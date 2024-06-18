@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { createGlobalStyle } from "styled-components";
-import { reset } from "styled-reset";
-import { media } from "./theme";
+import { createGlobalStyle } from 'styled-components';
+import { reset } from 'styled-reset';
+import { media } from './theme';
 
 const GlobalStyles = createGlobalStyle`
     ${reset}
