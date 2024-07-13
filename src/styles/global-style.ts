@@ -6,6 +6,9 @@ import { media } from './theme';
 
 const GlobalStyles = createGlobalStyle`
     ${reset}
+    *{
+        box-sizing: border-box;
+    }
     ::-webkit-scrollbar { 
         display: none !important;
     }
@@ -16,6 +19,7 @@ const GlobalStyles = createGlobalStyle`
     div[role="button"] {
         cursor: pointer;
     }
+    
     html{
         font-family: "Montserrat", sans-serif;
         color: ${({ theme }) => theme.color.gray};
@@ -23,6 +27,12 @@ const GlobalStyles = createGlobalStyle`
         ${media.mobile}{
             font-size: 8px;
         }
+    }
+    button {
+        border: none;
+        outline: none;
+        background-color: inherit ;
+        cursor: pointer;
     }
     .flex{
         width: 100%;
