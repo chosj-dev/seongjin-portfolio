@@ -15,11 +15,9 @@ const Background = () => {
 
 const BackgroundImage = styled.div<{ bgColor: string }>`
     width: 100%;
-    max-width: 1800px;
     min-height: 100vh;
-    height: 100;
     margin: 0 auto;
-    background-color: ${({ bgColor }) => bgColor};
+    background-color: #232323;
     background-repeat: no-repeat;
     background-size: cover;
     box-shadow:
