@@ -1,0 +1,37 @@
+name: CI/CD with Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Set up Docker Compose
+      run: sudo apt-get update && sudo apt-get install -y docker-compose
+
+    - name: Build and run services
+      run: |
+        docker-compose -f ./docker-compose.yml up --build -d
+        # 여기서 테스트를 실행할 수 있습니다.
+        # 예: curl -f http://localhost:80
+
+    - name: Run tests
+      run: |
+        # 예제 테스트 명령어, 실제 테스트를 여기에 추가
+        docker-compose exec app npm test
+
+    - name: Shut down services
+      run: docker-compose down
