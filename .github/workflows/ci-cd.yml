@@ -1,37 +1,41 @@
-name: CI/CD with Docker Compose
+name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
 
-    - name: Set up Docker Compose
-      run: sudo apt-get update && sudo apt-get install -y docker-compose
+            - name: Build Docker image
+              run: |
+                  docker build -t sseong-web-server:latest .
 
-    - name: Build and run services
-      run: |
-        docker-compose -f ./docker-compose.yml up --build -d
-        # 여기서 테스트를 실행할 수 있습니다.
-        # 예: curl -f http://localhost:80
+            - name: Copy files to EC2
+              uses: appleboy/scp-action@v0.1.3
+              with:
+                  host: ${{ secrets.AWS_EC2_HOST }}
+                  username: ${{ secrets.AWS_EC2_USER }}
+                  key: ${{ secrets.AWS_EC2_KEY }}
+                  source: '.'
+                  target: '/home/${{ secrets.AWS_EC2_USER }}/seongjin-portfolio'
 
-    - name: Run tests
-      run: |
-        # 예제 테스트 명령어, 실제 테스트를 여기에 추가
-        docker-compose exec app npm test
-
-    - name: Shut down services
-      run: docker-compose down
+            - name: Deploy to EC2
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.AWS_EC2_HOST }}
+                  username: ${{ secrets.AWS_EC2_USER }}
+                  key: ${{ secrets.AWS_EC2_KEY }}
+                  script: |
+                      cd /home/${{ secrets.AWS_EC2_USER }}/seongjin-portfolio
+                      docker-compose down
+                      docker-compose up -d --build

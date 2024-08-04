@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-COPY package.json yarn.lock .
+COPY package.json yarn.lock ./
 
 RUN yarn install
 
