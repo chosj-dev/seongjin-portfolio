@@ -24,6 +24,7 @@ jobs:
                   key: ${{ secrets.AWS_EC2_KEY }}
                   source: .
                   target: /home/${{ secrets.AWS_EC2_USER }}/seongjin-portfolio
+                  overwrite: true
 
             - name: Deploy to EC2
               uses: appleboy/ssh-action@master
